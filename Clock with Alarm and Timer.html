@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Clock, Alarm & Timer</title>
+<style>
+body {
+font-family: Arial;
+text-align: center;
+margin-top: 50px;
+}
+h1 {
+font-size: 50px;
+}
+input {
+padding: 5px;
+font-size: 18px;
+}
+button {
+padding: 8px 15px;
+font-size: 18px;
+margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<h1 id="clock">00:00:00</h1>
+
+<!-- Alarm -->
+<h2>Set Alarm</h2>
+<input type="time" id="alarmTime">
+<button onclick="setAlarm()">Set Alarm</button>
+
+<!-- Timer -->
+<h2>Timer (seconds)</h2>
+<input type="number" id="timerInput" placeholder="Enter seconds">
+<button onclick="startTimer()">Start Timer</button>
+<h3 id="timerDisplay"></h3>
+
+<audio id="alarmSound">
+<source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">
+</audio>
+
+<script>
+// CLOCK
+function updateClock() {
+const now = new Date();
+document.getElementById("clock").textContent = now.toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ALARM
+let alarmTime = null;
+function setAlarm() {
+alarmTime = document.getElementById("alarmTime").value;
+alert("Alarm set for " + alarmTime);
+}
+
+setInterval(() => {
+const now = new Date();
+const current = now.getHours().toString().padStart(2, '0') + ":" +
+now.getMinutes().toString().padStart(2, '0');
+
+if (alarmTime === current) {
+document.getElementById("alarmSound").play();
+alert("Alarm ringing!");
+alarmTime = null;
+}
+}, 1000);
+
+// TIMER
+let timerInterval;
+function startTimer() {
+let timeLeft = parseInt(document.getElementById("timerInput").value);
+document.getElementById("timerDisplay").textContent = timeLeft + "s";
+
+timerInterval = setInterval(() => {
+timeLeft--;
+document.getElementById("timerDisplay").textContent = timeLeft + "s";
+
+if (timeLeft <= 0) {
+clearInterval(timerInterval);
+document.getElementById("alarmSound").play();
+alert("Timer done!");
+}
+}, 1000);
+}
+</script>
+
+</body>
+</html>
